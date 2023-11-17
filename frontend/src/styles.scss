@@ -1,0 +1,182 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use "@angular/material" as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$frontend-primary: mat.define-palette(mat.$indigo-palette);
+$frontend-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$frontend-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$frontend-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $frontend-primary,
+      accent: $frontend-accent,
+      warn: $frontend-warn,
+    ),
+  )
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($frontend-theme);
+
+/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+
+@layer base {
+  body {
+    font-family: "Roboto", sans-serif;
+    min-height: 100vh;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1;
+  }
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    font: inherit;
+  }
+  img,
+  picture,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+  input,
+  select,
+  textarea {
+    background-color: transparent;
+    outline: none;
+  }
+  button {
+    cursor: pointer;
+    background-color: transparent;
+    outline: none;
+    border: 0;
+  }
+  ul li {
+    list-style: none;
+  }
+}
+
+.font-500 {
+  font-weight: 500;
+}
+.font-600 {
+  font-weight: 600;
+}
+.font-700 {
+  font-weight: 700;
+}
+
+.text-xl {
+  font-size: 18px;
+  line-height: 28px;
+}
+.text-2xl {
+  font-size: 24px;
+}
+.text-5xl {
+  font-size: 48px;
+}
+.text-medium {
+  font-size: 16px;
+}
+.text-sm {
+  font-size: 14px;
+  line-height: 28px;
+}
+
+.text-gray {
+  color: #999999;
+}
+.text-6B6B6B {
+  color: #6b6b6b;
+}
+.text-black {
+  color: #000000;
+}
+.text-white {
+  color: #ffffff !important;
+}
+.text-23BB86 {
+  color: #23bb86 !important;
+}
+.text-3A1097 {
+  color: #3a1097;
+}
+
+.bg-black {
+  background: #000;
+}
+
+.bg-F3EDFF {
+  background: #f3edff;
+}
+.bg-FFAF40 {
+  background: #ffaf40 !important;
+}
+.bg-e74c3c {
+  background: #e74c3c !important;
+}
+
+.noPadding {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.noMarginX {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.slick-track {
+  padding: 26px 0px !important;
+}
+
+.slide.card.col-sm-6.col-md-4.col-lg-3.mx-2.slick-slide.slick-active {
+  height: 420px;
+}
+
+.break-word {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+.break-word-line1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

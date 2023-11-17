@@ -1,0 +1,1860 @@
+openapi: 3.0.3
+# swagger: '2.0'
+info:
+  title: This is my swagger UI Docs 123
+  description: this is my comapny documentation made by me
+  version: 1.0.0
+  contact:
+    email: giab8185@gmail.com
+  liscene:
+    name: Apache 2.0
+    url: 'http://apache.org'
+servers:
+  - url: '{protocol}://localhost:{port}/api/v1'
+    variables:
+      port:
+        enum:
+          - '8080'
+          - '3000'
+        default: '8080'
+      protocol:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'http'
+tags:
+  - name: Category
+    description: All data of Category
+  - name: authen
+    description: sing-in/sign-up
+  - name: Post_blog
+    description: create blog
+  - name: Comment_blog
+    description: Comment blog
+  - name: Tag_blog
+    description: Tag blog
+  - name: HashTag_blog
+    description: HashTag Blog
+  - name: Upload_Files
+    description: Upload Files
+paths:
+  /category:
+    #get data:
+    get:
+      # security:
+      #   - bearerAuth: [123]
+      tags:
+        - Category
+      summary: get data of category
+      description: take data
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                _id:
+                  type: string
+                name:
+                  type: string
+    #post data:
+    post:
+      tags:
+        - Category
+      summary: post data to category
+      descripton: add data
+      operationId: Post data
+      requestBody:
+        description: add new an data to category
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+
+  /category/{id}:
+    get:
+      tags:
+        - Category
+      summary: get data by Id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+    put:
+      tags:
+        - Category
+      summary: Update item of category
+      parameters:
+        - in: path
+          name: id
+          desciption: Id of item from category need to be update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Form add data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        200:
+          description: Success
+          content:
+            application/jsonn:
+              schema:
+                $ref: '#/components/schemas/Category'
+    delete:
+      tags:
+        - Category
+      summary: delete item by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+
+  /categories/posts/{id}:
+    get:
+      tags:
+        - Category
+      summary: Get all posts by category
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the category
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The response message
+                  data:
+                    type: object
+                    description: The retrieved category data
+                  example:
+                    message: success
+                    data:
+                      _id: 'category_id'
+                      name: 'Category name'
+                      posts:
+                        - _id: 'post_id_1'
+                          title: 'Post title 1'
+                          content: 'Post content 1'
+                        - _id: 'post_id_2'
+                          title: 'Post title 2'
+                          content: 'Post content 2'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The error message
+                  error:
+                    type: string
+                    description: The specific error details
+                  example:
+                    message: fail
+                    error: Not found post by category
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The error message
+                  error:
+                    type: string
+                    description: The specific error details
+                  example:
+                    message: fail
+                    error: Internal server error
+
+  /sign-up:
+    post:
+      tags:
+        - authen
+      summary: SignUp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUp'
+  /sign-in:
+    post:
+      tags:
+        - authen
+      summary: SignIn
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignIn'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignIn'
+
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get all users
+      description: Retrieves a list of all users.
+      parameters:
+        - name: _page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+        - name: _limit
+          in: query
+          description: Number of items per page
+          required: false
+          type: integer
+        - name: q
+          in: query
+          description: Search query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              docs:
+                type: array
+                items:
+                  $ref: '#/definitions/User'
+              totalDocs:
+                type: integer
+              limit:
+                type: integer
+              totalPages:
+                type: integer
+              page:
+                type: integer
+              pagingCounter:
+                type: integer
+              hasPrevPage:
+                type: boolean
+              hasNextPage:
+                type: boolean
+              prevPage:
+                type: integer
+              nextPage:
+                type: integer
+        '500':
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              msg:
+                type: string
+  /users/counter/user-new:
+    get:
+      summary: Get count of new users
+      tags:
+        - Users
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: The message describing the count
+                count:
+                  type: integer
+                  description: The count of new users
+  /users/deleted/all:
+    get:
+      summary: Get all deleted users
+      tags:
+        - Users
+      produces:
+        - application/json
+      parameters:
+        - name: _page
+          in: query
+          description: The page number for pagination
+          required: false
+          type: integer
+          format: int32
+        - name: _limit
+          in: query
+          description: The number of items per page for pagination
+          required: false
+          type: integer
+          format: int32
+        - name: q
+          in: query
+          description: The search query for username or email
+          required: false
+          type: string
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            $ref: "Users"
+      definitions:
+        UserPaginatedResponse:
+          type: object
+          properties:
+            docs:
+              type: array
+              items:
+                $ref: "User"
+            total:
+              type: integer
+              description: The total number of deleted users
+            limit:
+              type: integer
+              description: The limit of items per page
+            page:
+              type: integer
+              description: The current page number
+            pages:
+              type: integer
+              description: The total number of pages
+        User:
+          type: object
+          properties:
+            _id:
+              type: string
+              description: The unique identifier of the user
+            username:
+              type: string
+              description: The username of the user
+            email:
+              type: string
+              description: The email of the user
+            deleted:
+              type: boolean
+              description: Indicates if the user is deleted
+            createdAt:
+              type: string
+              format: date-time
+              description: The date and time when the user was created
+            updatedAt:
+              type: string
+              format: date-time
+              description: The date and time when the user was last updated
+  /users/posts/all/{id}:
+    get:
+      summary: Get all posts by user ID
+      tags:
+        - Users
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user
+          required: true
+          type: string
+        - name: _page
+          in: query
+          description: The page number for pagination
+          required: false
+          type: integer
+          format: int32
+        - name: _limit
+          in: query
+          description: The number of items per page for pagination
+          required: false
+          type: integer
+          format: int32
+        - name: q
+          in: query
+          description: The search query for username or email
+          required: false
+          type: string
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            $ref: "Post"
+      definitions:
+        UserPostResponse:
+          type: object
+          properties:
+            message:
+              type: string
+              description: The response message
+            data:
+              $ref: "#/definitions/UserPost"
+        UserPost:
+          type: object
+          properties:
+            _id:
+              type: string
+              description: The unique identifier of the user
+            username:
+              type: string
+              description: The username of the user
+            email:
+              type: string
+              description: The email of the user
+            postList:
+              type: array
+              items:
+                $ref: "#/definitions/Post"
+        Post:
+          type: object
+          properties:
+            _id:
+              type: string
+              description: The unique identifier of the post
+            title:
+              type: string
+              description: The title of the post
+            author:
+              $ref: "#/definitions/UserSummary"
+            category:
+              $ref: "#/definitions/Category"
+        UserSummary:
+          type: object
+          properties:
+            _id:
+              type: string
+              description: The unique identifier of the user
+            username:
+              type: string
+              description: The username of the user
+            email:
+              type: string
+              description: The email of the user
+        Category:
+          type: object
+          properties:
+            _id:
+              type: string
+              description: The unique identifier of the category
+            name:
+              type: string
+              description: The name of the category
+  /users/create:
+    post:
+      summary: Create a new user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+      responses:
+        200:
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/{id}:
+    put:
+      summary: Update a user by ID
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+      responses:
+        200:
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/delete-fake/{id}:
+    put:
+      summary: Set delete status for a user by ID
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to update delete status
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Delete status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/restore/{id}:
+    put:
+      summary: Restore a deleted user by ID
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to restore
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: User restored successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/delete/{id}:
+    delete:
+      summary: Delete a user by ID
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /posts:
+    get:
+      tags:
+        - Post_blog
+      summary: Get all posts
+      parameters:
+        - in: query
+          name: _page
+          schema:
+            type: integer
+            default: 1
+          description: The page number (optional)
+        - in: query
+          name: _limit
+          schema:
+            type: integer
+            default: 10
+          description: The number of posts per page (optional)
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Filter posts by category (optional)
+        - in: query
+          name: q
+          schema:
+            type: string
+          description: Filter posts by keyword (optional)
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The response message
+                  posts:
+                    type: object
+                    description: The retrieved posts data
+                  example:
+                    message: Get all posts successfully
+                    posts:
+                      docs:
+                        - _id: 'post_id_1'
+                          title: 'Post title 1'
+                          content: 'Post content 1'
+                          author:
+                            _id: 'author_id_1'
+                            name: 'Author name 1'
+                          category:
+                            _id: 'category_id_1'
+                            name: 'Category name 1'
+                          tags:
+                            - _id: 'tag_id_1'
+                              name: 'Tag name 1'
+                            - _id: 'tag_id_2'
+                              name: 'Tag name 2'
+                      totalDocs: 20
+                      totalPages: 2
+                      page: 1
+                      limit: 10
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The error message
+                  example:
+                    message: Get all posts failed
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The error message
+                  example:
+                    message: Internal server error
+    post:
+      tags:
+        - Post_blog
+      summary: Post blog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+    delete:
+      tags:
+        - Post_blog
+      summary: delete blog by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+  /posts/{id}:
+    put:
+      tags:
+        - Post_blog
+      summary: Update post
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the post
+          schema:
+            type: string
+        - in: body
+          name: body
+          required: true
+          description: Updated post data
+          schema:
+            $ref: '#/components/schemas/UpdatePostData'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  post:
+                    $ref: '#/components/schemas/Post'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    get:
+      summary: Get post by ID
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the post
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            $ref: "#/definitions/PostResponse"
+      tags:
+        - Post_blog
+  /posts/approved:
+    get:
+      summary: Get all approved posts
+      produces:
+        - application/json
+      parameters:
+        - name: _page
+          in: query
+          description: The page number for pagination
+          required: false
+          type: integer
+          format: int32
+        - name: _limit
+          in: query
+          description: The number of items per page for pagination
+          required: false
+          type: integer
+          format: int32
+        - name: category
+          in: query
+          description: The category slug for filtering
+          required: false
+          type: string
+        - name: q
+          in: query
+          description: The search query for title or content
+          required: false
+          type: string
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            $ref: "#/components/schemas/Post"
+      tags:
+        - Post_blog
+      definitions:
+        PostPaginatedResponse:
+          type: object
+          properties:
+            message:
+              type: string
+              description: The response message
+            posts:
+              $ref: "#/components/schemas/Post"
+        PostPaginated:
+          type: object
+          properties:
+            docs:
+              type: array
+              items:
+                $ref: "#/components/schemas/Post"
+            total:
+              type: integer
+              description: The total number of approved posts
+            limit:
+              type: integer
+              description: The limit of items per page
+            page:
+              type: integer
+              description: The current page number
+            pages:
+              type: integer
+              description: The total number of pages
+        Post:
+          type: object
+          properties:
+            _id:
+              type: string
+              description: The unique identifier of the post
+            title:
+              type: string
+              description: The title of the post
+            content:
+              type: string
+              description: The content of the post
+            author:
+              $ref: "#/components/schemas/Users"
+            category:
+              $ref: "#/components/schemas/Category"
+            tags:
+              type: array
+              items:
+                $ref: "#/components/schemas/Tag"
+        UserSummary:
+          type: object
+          properties:
+            _id:
+              type: string
+              description: The unique identifier of the user
+            username:
+              type: string
+              description: The username of the user
+            email:
+              type: string
+              description: The email of the user
+        Category:
+          type: object
+          properties:
+            _id:
+              type: string
+              description: The unique identifier of the category
+            name:
+              type: string
+              description: The name of the category
+        Tag:
+          type: object
+          properties:
+            _id:
+              type: string
+              description: The unique identifier of the tag
+            name:
+              type: string
+              description: The name of the tag
+  /delete-fake/{id}:
+    put:
+      tags:
+        - Post_blog
+      summary: Delete fake a post by id
+      description: Deletes a post with the given id and sets the deleted flag to true
+      parameters:
+        - in: path
+          name: id
+          description: ID of the post to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object containing a success message and the deleted post
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Delete post successfully
+                  post:
+                    $ref: '#/components/schemas/Post'
+        '400':
+          description: A JSON object containing an error message if the post could not be deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Delete post failed
+        '500':
+          description: A JSON object containing an error message if there was a server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+  /posts/approved/{id}:
+    put:
+      tags:
+        - Post_blog
+      summary: Update status to 'approved'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          description: ID của bài đăng
+      responses:
+        '200':
+          description: Thành công
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Thông báo thành công
+              post:
+                type: object
+                description: Bài đăng đã được cập nhật
+        '400':
+          description: Lỗi không tìm thấy bài đăng
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Thông báo lỗi
+        '500':
+          description: Lỗi máy chủ
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Thông báo lỗi máy chủ
+  /posts/rejected/{id}:
+    put:
+      tags:
+        - Post_blog
+      summary: Update status to 'rejected'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          description: ID của bài đăng
+      responses:
+        '200':
+          description: Thành công
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Thông báo thành công
+              post:
+                type: object
+                description: Bài đăng đã được cập nhật
+        '400':
+          description: Lỗi không tìm thấy bài đăng
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Thông báo lỗi
+        '500':
+          description: Lỗi máy chủ
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Thông báo lỗi máy chủ
+
+  /posts/pending/{id}:
+    put:
+      tags:
+        - Post_blog
+      summary: Update status to 'pending'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          description: ID của bài đăng
+      responses:
+        '200':
+          description: Thành công
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Thông báo thành công
+              post:
+                type: object
+                description: Bài đăng đã được cập nhật
+        '400':
+          description: Lỗi không tìm thấy bài đăng
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Thông báo lỗi
+        '500':
+          description: Lỗi máy chủ
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Thông báo lỗi máy chủ
+  /restore/{id}:
+    put:
+      tags:
+        - Post_blog
+      summary: Undo delete of a post by id
+      description: Undoes the delete operation of a post with the given id by setting the deleted flag to false
+      parameters:
+        - in: path
+          name: id
+          description: ID of the post to undo delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object containing a success message and the post that was undone
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Undo delete post successfully
+                  post:
+                    $ref: '#/components/schemas/Post'
+
+        '400':
+          description: A JSON object containing an error message if the post could not be undone
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Undo delete post failed
+
+        '500':
+          description: A JSON object containing an error message if there was a server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+  /posts/related/{id}:
+    get:
+      tags:
+        - Post_blog
+      summary: Get related posts
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the post
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  posts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Post'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /counter/post-new:
+    get:
+      summary: Lấy số lượng bài viết mới
+      tags:
+        - Post_blog
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    count:
+                      type: integer
+        '500':
+          description: Lỗi server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /posts/pending/all:
+    get:
+      summary: Lấy danh sách bài viết chờ duyệt
+      tags:
+        - Post_blog
+      parameters:
+        - in: query
+          name: _page
+          schema:
+            type: integer
+            default: 1
+          description: Số trang hiện tại
+        - in: query
+          name: _limit
+          schema:
+            type: integer
+            default: 10
+          description: Số lượng bài viết trên mỗi trang
+        - in: query
+          name: q
+          schema:
+            type: string
+          description: Từ khóa tìm kiếm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  posts:
+                    type: object
+                    properties:
+                      docs:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Post'
+                      totalDocs:
+                        type: integer
+                      limit:
+                        type: integer
+                      totalPages:
+                        type: integer
+                      page:
+                        type: integer
+                      pagingCounter:
+                        type: integer
+                      hasPrevPage:
+                        type: boolean
+                      hasNextPage:
+                        type: boolean
+        '500':
+          description: Lỗi server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /deleted/all:
+    get:
+      summary: Lấy danh sách bài viết đã bị xóa
+      tags:
+        - Post_blog
+      parameters:
+        - in: query
+          name: _page
+          schema:
+            type: integer
+            default: 1
+          description: Số trang hiện tại
+        - in: query
+          name: _limit
+          schema:
+            type: integer
+            default: 10
+          description: Số lượng bài viết trên mỗi trang
+        - in: query
+          name: q
+          schema:
+            type: string
+          description: Từ khóa tìm kiếm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  posts:
+                    type: object
+                    properties:
+                      docs:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Post'
+                      totalDocs:
+                        type: integer
+                      limit:
+                        type: integer
+                      totalPages:
+                        type: integer
+                      page:
+                        type: integer
+                      pagingCounter:
+                        type: integer
+                      hasPrevPage:
+                        type: boolean
+                      hasNextPage:
+                        type: boolean
+        '500':
+          description: Lỗi server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /comments:
+    get:
+      tags:
+        - Comment_blog
+      summary: get all comments
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Comments'
+    post:
+      tags:
+        - Comment_blog
+      summary: Send Comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comments'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Comments'
+  /comments/{id}:
+    get:
+      tags:
+        - Comment_blog
+      summary: get Comment by Id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Comments'
+    put:
+      tags:
+        - Comment_blog
+      summary: update comment by id in blog
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: string
+    delete:
+      tags:
+        - Comment_blog
+      summary: delete comment by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Comments'
+
+  /countcommentPosts:
+    get:
+      tags:
+        - Comment_blog
+      summary: get amount comment by Post
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                # properties:
+  /commentPosts/{id}:
+    get:
+      tags:
+        - Comment_blog
+      summary: get amount comment by Post
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /tag:
+    get:
+      tags:
+        - Tag_blog
+      summary: get all tags
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tags'
+    post:
+      tags:
+        - Tag_blog
+      summary: add Tag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tags'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tags'
+  /tag/{id}:
+    get:
+      tags:
+        - Tag_blog
+      summary: get tag by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: slug
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Tags'
+    delete:
+      tags:
+        - Tag_blog
+      summary: delete tag by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Tags'
+    put:
+      tags:
+        - Tag_blog
+      summary: update tag
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tags'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Tags'
+  /hashtag/{slug}:
+    get:
+      tags:
+        - HashTag_blog
+      summary: get all blog by tag
+      parameters:
+        - in: path
+          name: slug
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+  /uploadfiles:
+    post:
+      summary: upload files
+      description: upload image
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        200:
+          description: Ok
+  /images/upload:
+    post:
+      tags:
+        - Upload_Files
+      summary: Upload an image
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          description: The image file to upload
+          required: true
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              urls:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    url:
+                      type: string
+                      format: uri
+                      description: The URL of the uploaded image
+                    public_id:
+                      type: string
+                      description: The public ID of the uploaded image in Cloudinary
+        400:
+          description: Invalid file
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message
+                /images/{public_id}:
+  /images/{public_id}:
+    delete:
+      tags:
+        - Upload_Files
+      summary: Delete an image by public ID
+      parameters:
+        - in: path
+          name: public_id
+          type: string
+          description: The public ID of the image to delete
+          required: true
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Success message
+        400:
+          description: Invalid public ID or failed to delete image
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message
+components:
+  schemas:
+    Category:
+      type: object
+      required:
+        - name
+        - slug
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+      xml:
+        name: Category
+    SignUp:
+      type: object
+      required:
+        - username
+        - email
+        - password
+        - confirmPassword
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        confirmPassword:
+          type: string
+    SignIn:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          default: giab@gmail.com
+        password:
+          type: string
+          default: 12345
+    Post:
+      type: object
+      required:
+        - title
+        - author
+        - content
+        - images
+        - category
+      properties:
+        title:
+          type: string
+        author:
+          type: string
+        content:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+            default: 'url'
+        likes:
+          type: integer
+          default: 0
+        category:
+          type: string
+        comments:
+          type: array
+          items:
+            type: string
+          default: []
+        is_active:
+          type: boolean
+          default: true
+        status:
+          type: string
+          default: 'public'
+        tags:
+          type: array
+          items:
+            type: string
+          default: []
+        deleted:
+          type: boolean
+          default: false
+    Comments:
+      type: object
+      required:
+        - content
+      properties:
+        userId:
+          type: string
+        postId:
+          type: string
+        content:
+          type: string
+    User:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        _id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        avatar:
+          type: string
+        role:
+          type: string
+          enum:
+            - user
+            - admin
+            - superadmin
+        is_active:
+          type: boolean
+        deleted:
+          type: boolean
+        postList:
+          type: array
+          items:
+            $ref: '#/definitions/Post'
+        isVerified:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Tags:
+      type: object
+      required:
+        - title
+        - slug
+      properties:
+        title:
+          type: string
+        slug:
+          type: string
+
+  securitySchemes:
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
